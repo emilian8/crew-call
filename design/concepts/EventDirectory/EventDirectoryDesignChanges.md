@@ -35,6 +35,3 @@
 - **Cascade delete:** verified that `deleteEvent` also removes memberships.
 
 ---
-
-**Result:**
-EventDirectory now fully enforces permissions, supports proper lifecycle cleanup, and aligns with the modularity and testing expectations of Assignment 4a.

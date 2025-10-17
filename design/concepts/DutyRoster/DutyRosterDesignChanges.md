@@ -42,4 +42,3 @@
 ## Result
 
 The DutyRoster implementation now supports a complete, testable duty lifecycle with explicit permission control, realistic data persistence, and clean modular separation.
-It fully addresses all Assignment 2 feedback and aligns with 6.1040’s Assignment 4a backend design expectations.

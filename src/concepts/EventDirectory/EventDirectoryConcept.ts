@@ -76,6 +76,20 @@ export default class EventDirectoryConcept {
     return role === "Organizer" || role === "DutyMember";
   }
 
+  private toDate(val: unknown): Date | null {
+    if (val instanceof Date && !isNaN(val.valueOf())) return val;
+    if (typeof val === "string" || typeof val === "number") {
+      const d = new Date(val as any);
+      return isNaN(d.valueOf()) ? null : d;
+    }
+    if (val && typeof val === "object" && "$date" in (val as Record<string, unknown>)) {
+      const raw = (val as Record<string, unknown>)["$date"];
+      const d = new Date(raw as any);
+      return isNaN(d.valueOf()) ? null : d;
+    }
+    return null;
+  }
+
   // --------------------------------------------------------------------------
   // Actions
   // --------------------------------------------------------------------------
@@ -89,14 +103,16 @@ export default class EventDirectoryConcept {
     { creator, title, startsAt, endsAt }: {
       creator: User;
       title: string;
-      startsAt: Date;
-      endsAt: Date;
+      startsAt: Date | string | number | { $date: string | number };
+      endsAt: Date | string | number | { $date: string | number };
     },
   ): Promise<{ event: Event } | { error: string }> {
-    if (!(startsAt instanceof Date) || !(endsAt instanceof Date)) {
-      return { error: "startsAt and endsAt must be Date instances" };
+    const s = this.toDate(startsAt);
+    const e = this.toDate(endsAt);
+    if (!s || !e) {
+      return { error: "startsAt and endsAt must be valid dates" };
     }
-    if (startsAt >= endsAt) {
+    if (s >= e) {
       return { error: "startsAt must be earlier than endsAt" };
     }
 
@@ -107,8 +123,8 @@ export default class EventDirectoryConcept {
     await this.events.insertOne({
       _id: eventId,
       title,
-      startsAt,
-      endsAt,
+      startsAt: s,
+      endsAt: e,
       active: true,
       createdAt: now,
       updatedAt: now,

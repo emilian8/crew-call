@@ -1,19 +1,3 @@
-[@api-extraction-from-spec](api-extraction-from-spec.md)
-
-# Extracting from code
-
-The following is an explanation of how concepts are implemented, for the purposes of understanding how to extract an API.
-
-[@implementing-concepts](../background/implementing-concepts.md)
-
-# prompt:
-
-Now, analyze the following Concept Implementation and generate the API documentation based on these instructions.
-
-[@duty-roster](../concepts/DutyRoster/DutyRoster.md)
-
-# response:
-
 # API Specification: DutyRoster Concept
 
 **Purpose:** To represent all duties for an event and manage each duty’s lifecycle (Open → Assigned → Done) with clear ownership and due times.
@@ -266,5 +250,3 @@ Now, analyze the following Concept Implementation and generate the API documenta
   "error": "string"
 }
 ```
-
----

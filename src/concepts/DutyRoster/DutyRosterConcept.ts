@@ -77,6 +77,38 @@ export default class DutyRosterConcept {
     return val instanceof Date && !isNaN(val.valueOf());
   }
 
+  /**
+   * Accepts a Date instance, an ISO-8601 string, a numeric epoch, or Mongo
+   * Extended JSON { "$date": <string|number> } and returns a valid Date.
+   */
+  private toDate(val: unknown): Date | null {
+    // Already a Date
+    if (val instanceof Date && !isNaN(val.valueOf())) return val;
+
+    // ISO string
+    if (typeof val === "string") {
+      const d = new Date(val);
+      return isNaN(d.valueOf()) ? null : d;
+    }
+
+    // Epoch number (ms since 1970)
+    if (typeof val === "number") {
+      const d = new Date(val);
+      return isNaN(d.valueOf()) ? null : d;
+    }
+
+    // Mongo Extended JSON
+    if (val && typeof val === "object" && "$date" in (val as Record<string, unknown>)) {
+      const raw = (val as Record<string, unknown>)["$date"];
+      if (typeof raw === "string" || typeof raw === "number") {
+        const d = new Date(raw as string | number);
+        return isNaN(d.valueOf()) ? null : d;
+      }
+    }
+
+    return null;
+  }
+
   // -------------------------------------------------------------------------
   // Actions
   // -------------------------------------------------------------------------
@@ -91,13 +123,15 @@ export default class DutyRosterConcept {
       event: Event;
       actor: User;
       title: string;
-      dueAt: Date;
+      // Accept flexible JSON inputs, but store as Date
+      dueAt: Date | string | number | { $date: string | number };
     },
   ): Promise<{ duty: Duty } | { error: string }> {
-    if (!this.isDate(dueAt)) return { error: "dueAt must be a Date" };
+    const parsedDue = this.toDate(dueAt);
+    if (!parsedDue) return { error: "dueAt must be a Date" };
 
     const auth = await this.requireOrganizer(event, actor);
-    if ("error" in auth) return {error: auth.error};
+    if ("error" in auth) return { error: auth.error };
 
     const now = new Date();
     const dutyId = freshID() as Duty;
@@ -106,7 +140,7 @@ export default class DutyRosterConcept {
       _id: dutyId,
       event,
       title,
-      dueAt,
+      dueAt: parsedDue,
       status: "Open",
       assignee: null,
       createdAt: now,
@@ -132,7 +166,7 @@ export default class DutyRosterConcept {
     if ("error" in found) return found;
 
     const auth = await this.requireOrganizer(found.event, actor);
-    if ("error" in auth) return {error: auth.error};
+    if ("error" in auth) return { error: auth.error };
 
     if (found.status !== "Open" && found.status !== "Assigned") {
       return { error: `Cannot assign when status is ${found.status}` };
@@ -160,7 +194,7 @@ export default class DutyRosterConcept {
     if ("error" in found) return found;
 
     const auth = await this.requireOrganizer(found.event, actor);
-    if ("error" in auth) return {error: auth.error};
+    if ("error" in auth) return { error: auth.error };
 
     if (found.status !== "Assigned") {
       return { error: `Cannot unassign when status is ${found.status}` };
@@ -175,7 +209,7 @@ export default class DutyRosterConcept {
 
   /**
    * updateDuty
-   * @requires actor is Organizer (if guard provided); dueAt (if provided) is Date
+   * @requires actor is Organizer (if guard provided); dueAt (if provided) is Date-like
    * @effects  Applies edits to title/dueAt
    */
   async updateDuty(
@@ -183,21 +217,25 @@ export default class DutyRosterConcept {
       duty: Duty;
       actor: User;
       title?: string;
-      dueAt?: Date;
+      // Accept flexible inputs
+      dueAt?: Date | string | number | { $date: string | number };
     },
   ): Promise<Empty | { error: string }> {
     const found = await this.requireDuty(duty);
     if ("error" in found) return found;
 
     const auth = await this.requireOrganizer(found.event, actor);
-    if ("error" in auth) return {error: auth.error};
+    if ("error" in auth) return { error: auth.error };
 
     const update: Partial<Pick<DutyDoc, "title" | "dueAt">> = {};
     if (typeof title === "string") update.title = title;
+
     if (dueAt !== undefined) {
-      if (!this.isDate(dueAt)) return { error: "dueAt must be a Date" };
-      update.dueAt = dueAt;
+      const parsed = this.toDate(dueAt);
+      if (!parsed) return { error: "dueAt must be a Date" };
+      update.dueAt = parsed;
     }
+
     if (Object.keys(update).length === 0) return {};
 
     await this.duties.updateOne(
@@ -229,7 +267,7 @@ export default class DutyRosterConcept {
     // Assignee may self-complete; otherwise organizer required (if guard provided).
     if (found.assignee !== actor) {
       const auth = await this.requireOrganizer(found.event, actor);
-      if ("error" in auth) return {error: auth.error};
+      if ("error" in auth) return { error: auth.error };
     }
 
     await this.duties.updateOne(
@@ -254,7 +292,7 @@ export default class DutyRosterConcept {
     if ("error" in found) return found;
 
     const auth = await this.requireOrganizer(found.event, actor);
-    if ("error" in auth) return {error: auth.error};
+    if ("error" in auth) return { error: auth.error };
 
     if (found.status !== "Done") {
       return { error: `Cannot reopen when status is ${found.status}` };
@@ -282,7 +320,7 @@ export default class DutyRosterConcept {
     if ("error" in found) return found;
 
     const auth = await this.requireOrganizer(found.event, actor);
-    if ("error" in auth) return {error: auth.error};
+    if ("error" in auth) return { error: auth.error };
 
     const res = await this.duties.deleteOne({ _id: duty });
     if (res.deletedCount === 0) return { error: `Duty ${duty} not found` };

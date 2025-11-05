@@ -25,12 +25,27 @@
  */
 
 export const inclusions: Record<string, string> = {
-  // Feel free to delete these example inclusions
-  "/api/LikertSurvey/_getSurveyQuestions": "this is a public query",
-  "/api/LikertSurvey/_getSurveyResponses": "responses are public",
-  "/api/LikertSurvey/_getRespondentAnswers": "answers are visible",
-  "/api/LikertSurvey/submitResponse": "allow anyone to submit response",
-  "/api/LikertSurvey/updateResponse": "allow anyone to update their response",
+  // DutyRoster — read-only queries
+  "/api/DutyRoster/_getDuty":"read-only duty details for UI",
+  "/api/DutyRoster/_getEventDuties":"read-only list for event view",
+  "/api/DutyRoster/_getUserDuties":"read-only list for My Duties",
+
+  // EventDirectory — read-only queries
+  "/api/EventDirectory/eventExists":"public existence check for routing",
+  "/api/EventDirectory/_getEventMembers":"read-only members list",
+  "/api/EventDirectory/_getUserEvents":"read-only user’s events",
+  "/api/EventDirectory/_getEvent":"read-only event details",
+
+  // Notify — read-only queries
+  "/api/Notify/_getNotification":"read-only single notification",
+  "/api/Notify/_listUserNotifications":"read-only inbox list",
+
+  // RotationGroups — read-only queries (only if surfaced in FE)
+  "/api/RotationGroups/getTemplate":"read-only template lookup",
+  "/api/RotationGroups/_getTemplate":"read-only template details",
+  "/api/RotationGroups/_listTemplatesByOwner":"read-only owner’s templates",
+  "/api/RotationGroups/_getApplication":"read-only application details",
+  "/api/RotationGroups/_getAppliedDutiesForApplication":"read-only applied duties",
 };
 
 /**
@@ -44,7 +59,42 @@ export const inclusions: Record<string, string> = {
  */
 
 export const exclusions: Array<string> = [
-  // Feel free to delete these example exclusions
-  "/api/LikertSurvey/createSurvey",
-  "/api/LikertSurvey/addQuestion",
+  // DutyRoster — mutating + helpers
+  "/api/DutyRoster/requireDuty",
+  "/api/DutyRoster/requireOrganizer",
+  "/api/DutyRoster/isDate",
+  "/api/DutyRoster/toDate",
+  "/api/DutyRoster/addDuty",
+  "/api/DutyRoster/assignDuty",
+  "/api/DutyRoster/unassignDuty",
+  "/api/DutyRoster/updateDuty",
+  "/api/DutyRoster/markDone",
+  "/api/DutyRoster/reOpen",
+  "/api/DutyRoster/deleteDuty",
+
+  // EventDirectory — mutating + helpers
+  "/api/EventDirectory/hasOrganizerRole",
+  "/api/EventDirectory/isValidRole",
+  "/api/EventDirectory/toDate",
+  "/api/EventDirectory/createEvent",
+  "/api/EventDirectory/invite",
+  "/api/EventDirectory/setActive",
+  "/api/EventDirectory/removeMember",
+  "/api/EventDirectory/deleteEvent",
+
+  // Notify — mutating + helpers
+  "/api/Notify/ensureRecipient",
+  "/api/Notify/requireNotification",
+  "/api/Notify/notify",
+  "/api/Notify/markRead",
+  "/api/Notify/deleteNotification",
+
+  // RotationGroups — mutating + helpers
+  "/api/RotationGroups/normalizeUsers",
+  "/api/RotationGroups/normalizeStrings",
+  "/api/RotationGroups/requireOwner",
+  "/api/RotationGroups/createTemplate",
+  "/api/RotationGroups/updateTemplate",
+  "/api/RotationGroups/deleteTemplate",
+  "/api/RotationGroups/applyTemplate",
 ];

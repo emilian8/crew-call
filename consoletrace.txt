@@ -1,0 +1,188 @@
+[Requesting] Received request for path: /Auth/createAccount
+Requesting.request {
+  email: 'emilian8@mit.edu',
+  pw: 'Apple2005',
+  path: '/Auth/createAccount'
+} => { request: '019a5244-4a46-70f4-bb02-04d1467d3e2a' }
+Requesting.respond {
+  request: '019a5244-4a46-70f4-bb02-04d1467d3e2a',
+  created: true,
+  message: 'Account created, please log in',
+  error: null
+} => { request: '019a5244-4a46-70f4-bb02-04d1467d3e2a' }
+[Requesting] Received request for path: /Auth/login
+Requesting.request { email: 'emilian8@mit.edu', pw: 'Apple2005', path: '/Auth/login' } => { request: '019a5244-6eee-77f2-8480-14455f5e9a74' }
+Requesting.respond {
+  request: '019a5244-6eee-77f2-8480-14455f5e9a74',
+  token: 't.xzysmtsw1o',
+  userId: 'emilian8@mit.edu',
+  error: null
+} => { request: '019a5244-6eee-77f2-8480-14455f5e9a74' }
+[Requesting] Received request for path: /EventDirectory/createEvent
+Requesting.request {
+  token: 't.xzysmtsw1o',
+  creator: 'emilian8@mit.edu',
+  title: 'Weekly Cleaning',
+  startsAt: { '$date': '2025-11-05T09:00:00.000Z' },
+  endsAt: { '$date': '2025-11-12T10:00:00.000Z' },
+  path: '/EventDirectory/createEvent'
+} => { request: '019a5244-b3b0-754f-a340-32acef720209' }
+EventDirectory.createEvent {
+  creator: 'emilian8@mit.edu',
+  title: 'Weekly Cleaning',
+  startsAt: { '$date': '2025-11-05T09:00:00.000Z' },
+  endsAt: { '$date': '2025-11-12T10:00:00.000Z' }
+} => { event: '019a5244-b3f2-74d0-bc22-a3006e93acf6' }
+Requesting.respond {
+  request: '019a5244-b3b0-754f-a340-32acef720209',
+  event: '019a5244-b3f2-74d0-bc22-a3006e93acf6'
+} => { request: '019a5244-b3b0-754f-a340-32acef720209' }
+[Requesting] Received request for path: /EventDirectory/invite
+Requesting.request {
+  token: 't.xzysmtsw1o',
+  event: '019a5244-b3f2-74d0-bc22-a3006e93acf6',
+  inviter: 'emilian8@mit.edu',
+  invitee: 'Josh',
+  role: 'DutyMember',
+  path: '/EventDirectory/invite'
+} => { request: '019a5244-df6b-70d3-ba1d-2723b917f9c7' }
+EventDirectory.invite {
+  event: '019a5244-b3f2-74d0-bc22-a3006e93acf6',
+  inviter: 'emilian8@mit.edu',
+  invitee: 'Josh',
+  role: 'DutyMember'
+} => {}
+Requesting.respond { request: '019a5244-df6b-70d3-ba1d-2723b917f9c7', ok: true } => { request: '019a5244-df6b-70d3-ba1d-2723b917f9c7' }
+[Requesting] Received request for path: /EventDirectory/invite
+Requesting.request {
+  token: 't.xzysmtsw1o',
+  event: '019a5244-b3f2-74d0-bc22-a3006e93acf6',
+  inviter: 'emilian8@mit.edu',
+  invitee: 'Jacob',
+  role: 'DutyMember',
+  path: '/EventDirectory/invite'
+} => { request: '019a5244-edde-7fab-a4a0-f735e4263bad' }
+EventDirectory.invite {
+  event: '019a5244-b3f2-74d0-bc22-a3006e93acf6',
+  inviter: 'emilian8@mit.edu',
+  invitee: 'Jacob',
+  role: 'DutyMember'
+} => {}
+Requesting.respond { request: '019a5244-edde-7fab-a4a0-f735e4263bad', ok: true } => { request: '019a5244-edde-7fab-a4a0-f735e4263bad' }
+[Requesting] Received request for path: /DutyRoster/addDuty
+Requesting.request {
+  token: 't.xzysmtsw1o',
+  event: '019a5244-b3f2-74d0-bc22-a3006e93acf6',
+  actor: 'emilian8@mit.edu',
+  title: 'Clean Bathroom',
+  dueAt: '2025-11-05T17:00:00.000Z',
+  path: '/DutyRoster/addDuty'
+} => { request: '019a5245-203f-769d-be18-e3bf0e0c89b1' }
+DutyRoster.addDuty {
+  event: '019a5244-b3f2-74d0-bc22-a3006e93acf6',
+  actor: 'emilian8@mit.edu',
+  title: 'Clean Bathroom',
+  dueAt: '2025-11-05T17:00:00.000Z'
+} => { duty: '019a5245-2086-7136-b59c-f601eba1eb47' }
+Requesting.respond {
+  request: '019a5245-203f-769d-be18-e3bf0e0c89b1',
+  duty: '019a5245-2086-7136-b59c-f601eba1eb47'
+} => { request: '019a5245-203f-769d-be18-e3bf0e0c89b1' }
+[Requesting] Received request for path: /DutyRoster/assignDuty
+Requesting.request {
+  token: 't.xzysmtsw1o',
+  duty: '019a5245-2086-7136-b59c-f601eba1eb47',
+  actor: 'emilian8@mit.edu',
+  assignee: 'Josh',
+  path: '/DutyRoster/assignDuty'
+} => { request: '019a5245-222f-7c31-8a97-d9fb0c2d27f0' }
+DutyRoster.assignDuty {
+  duty: '019a5245-2086-7136-b59c-f601eba1eb47',
+  actor: 'emilian8@mit.edu',
+  assignee: 'Josh'
+} => {}
+Requesting.respond { request: '019a5245-222f-7c31-8a97-d9fb0c2d27f0', ok: true } => { request: '019a5245-222f-7c31-8a97-d9fb0c2d27f0' }
+[Requesting] Received request for path: /DutyRoster/addDuty
+Requesting.request {
+  token: 't.xzysmtsw1o',
+  event: '019a5244-b3f2-74d0-bc22-a3006e93acf6',
+  actor: 'emilian8@mit.edu',
+  title: 'Mop Floor',
+  dueAt: '2025-11-06T17:00:00.000Z',
+  path: '/DutyRoster/addDuty'
+} => { request: '019a5245-5e14-7514-b8a2-3038394200be' }
+DutyRoster.addDuty {
+  event: '019a5244-b3f2-74d0-bc22-a3006e93acf6',
+  actor: 'emilian8@mit.edu',
+  title: 'Mop Floor',
+  dueAt: '2025-11-06T17:00:00.000Z'
+} => { duty: '019a5245-5e5a-7d00-9b47-bc1014dd9317' }
+Requesting.respond {
+  request: '019a5245-5e14-7514-b8a2-3038394200be',
+  duty: '019a5245-5e5a-7d00-9b47-bc1014dd9317'
+} => { request: '019a5245-5e14-7514-b8a2-3038394200be' }
+[Requesting] Received request for path: /DutyRoster/assignDuty
+Requesting.request {
+  token: 't.xzysmtsw1o',
+  duty: '019a5245-5e5a-7d00-9b47-bc1014dd9317',
+  actor: 'emilian8@mit.edu',
+  assignee: 'Jacob',
+  path: '/DutyRoster/assignDuty'
+} => { request: '019a5245-6043-7b93-84fc-0fa92ff7b2a6' }
+DutyRoster.assignDuty {
+  duty: '019a5245-5e5a-7d00-9b47-bc1014dd9317',
+  actor: 'emilian8@mit.edu',
+  assignee: 'Jacob'
+} => {}
+Requesting.respond { request: '019a5245-6043-7b93-84fc-0fa92ff7b2a6', ok: true } => { request: '019a5245-6043-7b93-84fc-0fa92ff7b2a6' }
+[Requesting] Received request for path: /DutyRoster/markDone
+Requesting.request {
+  token: 't.xzysmtsw1o',
+  duty: '019a5245-5e5a-7d00-9b47-bc1014dd9317',
+  actor: 'emilian8@mit.edu',
+  path: '/DutyRoster/markDone'
+} => { request: '019a5245-7bda-78e7-aeb6-cff2308ff5fb' }
+DutyRoster.markDone {
+  duty: '019a5245-5e5a-7d00-9b47-bc1014dd9317',
+  actor: 'emilian8@mit.edu'
+} => {}
+Requesting.respond { request: '019a5245-7bda-78e7-aeb6-cff2308ff5fb', ok: true } => { request: '019a5245-7bda-78e7-aeb6-cff2308ff5fb' }
+[Requesting] Received request for path: /Auth/createAccount
+Requesting.request {
+  email: 'michael@mit.edu',
+  pw: 'Apple2005',
+  path: '/Auth/createAccount'
+} => { request: '019a5245-ca36-7aa8-b660-11c1497eaece' }
+Requesting.respond {
+  request: '019a5245-ca36-7aa8-b660-11c1497eaece',
+  created: true,
+  message: 'Account created, please log in',
+  error: null
+} => { request: '019a5245-ca36-7aa8-b660-11c1497eaece' }
+[Requesting] Received request for path: /Auth/login
+Requesting.request { email: 'michael@mit.edu', pw: 'Apple2005', path: '/Auth/login' } => { request: '019a5245-eb25-719b-a014-5fb735675e0d' }
+Requesting.respond {
+  request: '019a5245-eb25-719b-a014-5fb735675e0d',
+  token: 't.4zefkk7wjt',
+  userId: 'michael@mit.edu',
+  error: null
+} => { request: '019a5245-eb25-719b-a014-5fb735675e0d' }
+[Requesting] Received request for path: /EventDirectory/createEvent
+Requesting.request {
+  token: 't.4zefkk7wjt',
+  creator: 'michael@mit.edu',
+  title: 'Dishes',
+  startsAt: { '$date': '2025-11-05T09:00:00.000Z' },
+  endsAt: { '$date': '2025-11-15T10:00:00.000Z' },
+  path: '/EventDirectory/createEvent'
+} => { request: '019a5246-29cf-7bb4-9b41-57e5d0140f0a' }
+EventDirectory.createEvent {
+  creator: 'michael@mit.edu',
+  title: 'Dishes',
+  startsAt: { '$date': '2025-11-05T09:00:00.000Z' },
+  endsAt: { '$date': '2025-11-15T10:00:00.000Z' }
+} => { event: '019a5246-2a23-7593-92a9-18708534cf1e' }
+Requesting.respond {
+  request: '019a5246-29cf-7bb4-9b41-57e5d0140f0a',
+  event: '019a5246-2a23-7593-92a9-18708534cf1e'
+} => { request: '019a5246-29cf-7bb4-9b41-57e5d0140f0a' }
